@@ -1,4 +1,4 @@
---Genera un fichero, dentro de un directorio del servidor Oracle, con el código fuente de un programa PL/SQL almacenado.
+--Genera un fichero, dentro de un directorio del servidor indicado, con el código fuente de un programa PL/SQL almacenado.
 --Gustavo Tejerina
 
 DECLARE

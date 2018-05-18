@@ -3,21 +3,21 @@
 
 DECLARE
 
-  v_clob      CLOB;
-  v_cont_ini  NUMBER DEFAULT 1;
-  v_cont_fin  NUMBER DEFAULT 0;
-  v_out       VARCHAR2(32767);
-  v_cont_serv NUMBER DEFAULT 0;
+  v_clob        CLOB;
+  v_cont_ini    NUMBER DEFAULT 1;
+  v_cont_fin    NUMBER DEFAULT 0;
+  v_out         VARCHAR2(32767);
+  v_cont_lineas NUMBER DEFAULT 0;
 
 BEGIN
 
   --Obtención de campo CLOB
-  SELECT clob_field INTO v_clob FROM prueba WHERE ROWNUM <= 1;
+  SELECT clob_field INTO v_clob FROM prueba WHERE rownum <= 1;
 
   --Nº de ocurrencias de salto de línea dentro del CLOB
-  v_cont_serv := regexp_count(v_clob, chr(10));
+  v_cont_lineas := regexp_count(v_clob, chr(10));
 
-  FOR i IN 1 .. v_cont_serv LOOP
+  FOR i IN 1 .. v_cont_lineas LOOP
   
     --Primera posición de cada línea
     IF i = 1 THEN

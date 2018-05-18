@@ -1,4 +1,4 @@
---Output línea a línea de un campo de tipo CLOB.
+--Output lÃ­nea a lÃ­nea de un campo de tipo CLOB.
 --Gustavo Tejerina
 
 DECLARE
@@ -11,22 +11,22 @@ DECLARE
 
 BEGIN
 
-  --Obtención de campo CLOB
-  SELECT clob_field INTO v_clob FROM prueba WHERE rownum <= 1;
+  --ObtenciÃ³n de campo CLOB
+  SELECT campo_clob INTO v_clob FROM tabla WHERE ROWNUM <= 1;
 
-  --Nº de ocurrencias de salto de línea dentro del CLOB
+  --NÂº de ocurrencias de salto de lÃ­nea dentro del CLOB
   v_cont_lineas := REGEXP_COUNT(v_clob, CHR(10));
 
   FOR i IN 1 .. v_cont_lineas LOOP
   
-    --Primera posición de cada línea
+    --Primera posiciÃ³n de cada lÃ­nea
     IF i = 1 THEN
       v_cont_ini := 1;
     ELSE
       v_cont_ini := INSTR(v_clob, CHR(10), 1, i) + 1;
     END IF;
   
-    --Posición del salto de cada línea
+    --PosiciÃ³n del salto de cada lÃ­nea
     v_cont_fin := INSTR(v_clob, CHR(10), 1, i + 1);
   
     --Subcadena   

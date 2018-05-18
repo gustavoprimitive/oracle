@@ -15,7 +15,7 @@ BEGIN
   SELECT clob_field INTO v_clob FROM prueba WHERE rownum <= 1;
 
   --Nº de ocurrencias de salto de línea dentro del CLOB
-  v_cont_lineas := regexp_count(v_clob, chr(10));
+  v_cont_lineas := REGEXP_COUNT(v_clob, CHR(10));
 
   FOR i IN 1 .. v_cont_lineas LOOP
   
@@ -23,14 +23,14 @@ BEGIN
     IF i = 1 THEN
       v_cont_ini := 1;
     ELSE
-      v_cont_ini := instr(v_clob, chr(10), 1, i) + 1;
+      v_cont_ini := INSTR(v_clob, CHR(10), 1, i) + 1;
     END IF;
   
     --Posición del salto de cada línea
-    v_cont_fin := instr(v_clob, chr(10), 1, i + 1);
+    v_cont_fin := INSTR(v_clob, CHR(10), 1, i + 1);
   
     --Subcadena   
-    v_out := to_char(substr(v_clob, v_cont_ini, v_cont_fin - v_cont_ini));
+    v_out := TO_CHAR(SUBSTR(v_clob, v_cont_ini, v_cont_fin - v_cont_ini));
   
     dbms_output.put_line(v_out);
   

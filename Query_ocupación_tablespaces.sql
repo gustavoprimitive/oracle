@@ -1,4 +1,4 @@
---Ocupaci en MB y % de los tablespaces
+--Ocupaciﾃｳn en MB y % de los tablespaces
 SELECT fs.tablespace_name "TABLESPACE",
        (df.totalspace - fs.freespace) "ESPACIO OCUPADO (MB)",
        fs.freespace "ESPACIO LIBRE (MB)",
@@ -14,42 +14,25 @@ SELECT fs.tablespace_name "TABLESPACE",
  ORDER BY 5 DESC;
 
  
---Ocupaci en MB y % de los datafiles de los tablespaces 
+--Ocupaciﾃｳn en MB y % de los datafiles de los tablespaces 
 SELECT tablespace,
        datafile,
-       DECODE("ｿES AUTOEXTEND?", 0, 'No', 'Si') AS "ｿES AUTOEXTEND?",
+       DECODE("ﾂｿES AUTOEXTEND?", 0, 'No', 'Si') AS "ﾂｿES AUTOEXTEND?",
        "ESPACIO TOTAL (MB)",
        DECODE("ESPACIO LIBRE (MB)", NULL, '(Lleno)', "ESPACIO LIBRE (MB)") AS "ESPACIO LIBRE (MB)",
-       DECODE("ESPACIO OCUPADO (MB)",
-              NULL,
-              '(Lleno)',
-              "ESPACIO OCUPADO (MB)") AS "ESPACIO OCUPADO (MB)",
+       DECODE("ESPACIO OCUPADO (MB)", NULL, '(Lleno)', "ESPACIO OCUPADO (MB)") AS "ESPACIO OCUPADO (MB)",
        DECODE("OCUPACION (%)", '%', '100%', "OCUPACION (%)") AS "OCUPACION (%)",
-       DECODE("DEFINIDO TAMAﾑO MAXIMO (MB)",
-              0,
-              'N/A',
-              "DEFINIDO TAMAﾑO MAXIMO (MB)") AS "TAMAﾑO MAXIMO DEFINIDO (MB)",
-       DECODE("OCUPACION RESPECTO MAXIMO (%)",
-              NULL,
-              'N/A',
-              "OCUPACION RESPECTO MAXIMO (%)") AS "OCUPACION RESPECTO MAXIMO (%)"
+       DECODE("DEFINIDO TAMAﾃ前 MAXIMO (MB)", 0, 'N/A', "DEFINIDO TAMAﾃ前 MAXIMO (MB)") AS "TAMAﾃ前 MAXIMO DEFINIDO (MB)",
+       DECODE("OCUPACION RESPECTO MAXIMO (%)", NULL, 'N/A', "OCUPACION RESPECTO MAXIMO (%)") AS "OCUPACION RESPECTO MAXIMO (%)"
   FROM (SELECT dd.tablespace_name "TABLESPACE",
                dd.file_name "DATAFILE",
-               MAX(dd.maxbytes) AS "ｿES AUTOEXTEND?",
+               MAX(dd.maxbytes) AS "ﾂｿES AUTOEXTEND?",
                MAX(dd.bytes) / 1024 / 1024 AS "ESPACIO TOTAL (MB)",
                SUM(df.bytes) / 1024 / 1024 AS "ESPACIO LIBRE (MB)",
                (MAX(dd.bytes) - SUM(df.bytes)) / 1024 / 1024 AS "ESPACIO OCUPADO (MB)",
-               ROUND((MAX(dd.bytes) - SUM(df.bytes)) * 100 / MAX(dd.bytes),
-                     2) || '%' AS "OCUPACION (%)",
-               MAX(dd.maxbytes) / 1024 / 1024 AS "DEFINIDO TAMAﾑO MAXIMO (MB)",
-               DECODE(ROUND((MAX(dd.bytes) - SUM(df.bytes)) * 100 /
-                            decode(MAX(dd.maxbytes), 0, '', MAX(dd.maxbytes)),
-                            2) || '%',
-                      '%',
-                      '',
-                      ROUND((MAX(dd.bytes) - SUM(df.bytes)) * 100 /
-                            DECODE(MAX(dd.maxbytes), 0, '', MAX(dd.maxbytes)),
-                            2) || '%') AS "OCUPACION RESPECTO MAXIMO (%)"
+               ROUND((MAX(dd.bytes) - SUM(df.bytes)) * 100 / MAX(dd.bytes), 2) || '%' AS "OCUPACION (%)",
+               MAX(dd.maxbytes) / 1024 / 1024 AS "DEFINIDO TAMAﾃ前 MAXIMO (MB)",
+               DECODE(ROUND((MAX(dd.bytes) - SUM(df.bytes)) * 100 / DECODE(MAX(dd.maxbytes), 0, '', MAX(dd.maxbytes)), 2) || '%', '%', '', ROUND((MAX(dd.bytes) - SUM(df.bytes)) * 100 / DECODE(MAX(dd.maxbytes), 0, '', MAX(dd.maxbytes)), 2) || '%') AS "OCUPACION RESPECTO MAXIMO (%)"
           FROM dba_data_files dd, dba_free_space df
          WHERE dd.tablespace_name = df.tablespace_name(+)
            AND dd.file_id = df.file_id(+)
@@ -58,8 +41,8 @@ SELECT tablespace,
  ORDER BY 1, 2;
 
 
---Ocupaci en MB de las tablas de un tablespace dado
-SELECT segment_name "Tabla", bytes / 1024 / 1024 "Tama MB"
+--Ocupaciﾃｳn en MB de las tablas de un tablespace dado
+SELECT segment_name "Tabla", bytes / 1024 / 1024 "Tamaﾃｱo MB"
   FROM user_segments
  WHERE segment_type LIKE 'TABLE%'
    AND segment_name IN (SELECT table_name

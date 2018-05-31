@@ -36,7 +36,7 @@ SELECT tablespace,
           FROM dba_data_files dd, dba_free_space df
          WHERE dd.tablespace_name = df.tablespace_name(+)
            AND dd.file_id = df.file_id(+)
-        --AND upper(dd.tablespace_name) = upper('PRIME_IM_CASCADE')
+        --AND UPPER(dd.tablespace_name) = UPPER('PRIME_IM_CASCADE')
          GROUP BY dd.tablespace_name, dd.file_name)
  ORDER BY 1, 2;
 
@@ -48,7 +48,7 @@ SELECT segment_name "Tabla", bytes / 1024 / 1024 "Tamaño MB"
    AND segment_name IN (SELECT table_name
                           FROM all_tables
                          WHERE table_name = user_segments.segment_name
-                         --AND tablespace_name = 'HIS_RAW_DATA'
+                         --AND UPPER(tablespace_name) = UPPER('HIS_RAW_DATA')
                        )
    AND (bytes / 1024 / 1024) > 1
  ORDER BY 2 DESC;

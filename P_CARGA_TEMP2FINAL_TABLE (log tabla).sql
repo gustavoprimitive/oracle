@@ -1,11 +1,11 @@
   /*
   @P_DATA_TEMP2END_TABLE
   Procedimiento para la carga de datos mediante bulk binds desde una tabla temporal a la tabla final del modelo de datos.
-  Parámetros: 
+  ParÃ¡metros: 
   - load_log. Tipo boolean, si true: genera tabla con los datos del volcado. Por defecto, true.
   - no_logging. Tipo boolean, si true: cambia la tabla destino a modo nologging mientras dura la carga. Por defecto, true. 
   - no_constraints. Tipo boolean, si true: deshabilita las constraints de la tabla destino mientras dura la carga. Por defecto, true. 
-  - bulks_size. Tipo pls_integer: número de registros de cada volcado del cursor a la colección. Por defecto, 100.
+  - bulks_size. Tipo pls_integer: nÃºmero de registros de cada volcado del cursor a la colecciÃ³n. Por defecto, 100.
   - trunc_end_table: Tipo boolean, si true: trunca ta tabla destino antes de comenzar la carga. Por defecto, false.
   
   Nota: Se deben sustituir las cadenas:
@@ -28,14 +28,14 @@
     SELECT * 
       FROM source_table;
 
-  --Tipo colección tabla para volcar el cursor
+  --Tipo colecciÃ³n tabla para volcar el cursor
   TYPE t_cur_source IS TABLE OF cur_source%ROWTYPE;
 
-  --Colección para contener los datos del cursor
+  --ColecciÃ³n para contener los datos del cursor
   col_source t_cur_source;
 
   --Contadores
-  --Variable contador para el nº de iteración
+  --Variable contador para el nÂº de iteraciÃ³n
   v_count NUMBER DEFAULT 0;
   --Variable para comprobar existencia de tabla log
   v_check NUMBER DEFAULT 0;
@@ -48,7 +48,7 @@
   
   BEGIN
   
-    --Inserción de resultado ok en log
+    --InserciÃ³n de resultado ok en log
     EXECUTE IMMEDIATE 'INSERT /*+ APPEND */ INTO log_table
                        VALUES (' || v_count || ',' 
                                  || '''' || 'end_table' || '''' || ',' 
@@ -101,7 +101,7 @@ BEGIN
 
   --Si no_constraints = true, se deshabilitan las restricciones de la tabla destino
   IF no_constraints THEN
-    FOR cur_no_constraints IN (SELECT DISTINCT 'ALTER TABLE ' || table_name || ' DISABLE CONSTRAINT ' || constraint_name AS v_order
+    FOR cur_no_constraints IN (SELECT 'ALTER TABLE ' || table_name || ' DISABLE CONSTRAINT ' || constraint_name AS v_order
                                  FROM all_constraints
                                 WHERE table_name = 'end_table') LOOP
     
@@ -118,19 +118,19 @@ BEGIN
   
     BEGIN
     
-      --Volcado a colección en bloques de 100 registros (por defecto)
+      --Volcado a colecciÃ³n en bloques de 100 registros (por defecto)
       FETCH cur_source BULK COLLECT INTO col_source LIMIT bulks_size;
     
-      --Incremento para el número de iteración
+      --Incremento para el nÃºmero de iteraciÃ³n
       v_count := v_count + 1;
     
-      --Inserción de bloque como bulk binds y con el hint append
+      --InserciÃ³n de bloque como bulk binds y con el hint append
       FORALL i IN col_source.first .. col_source.last
         INSERT /*+ APPEND */ INTO end_table
         VALUES col_source(i);
       COMMIT;
     
-      --Incremento de número de registros totales
+      --Incremento de nÃºmero de registros totales
       v_sum := v_sum + col_source.count;
     
       --Llamada a procedimineto local de log con resultado ok
@@ -164,7 +164,7 @@ BEGIN
 
   --Si no_constraints = true, se habilitan de nuevo las restricciones de la tabla destino
   IF no_constraints THEN
-    FOR cur_no_constraints IN (SELECT DISTINCT 'ALTER TABLE ' || table_name || ' ENABLE CONSTRAINT ' || constraint_name AS v_order
+    FOR cur_no_constraints IN (SELECT 'ALTER TABLE ' || table_name || ' ENABLE CONSTRAINT ' || constraint_name AS v_order
                                  FROM all_constraints
                                 WHERE table_name = 'end_table') LOOP
     
@@ -179,7 +179,7 @@ EXCEPTION
     ROLLBACK;
     IF load_log THEN
       --Llamada a procedimineto local de log con resultado error
-      p_insert_log(NULL, 'ERROR: Excepción global. ' || SQLERRM);
+      p_insert_log(NULL, 'ERROR: ExcepciÃ³n global. ' || SQLERRM);
     END IF;
   
 END;

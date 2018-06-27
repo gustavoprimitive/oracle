@@ -1,11 +1,11 @@
   /*
   @P_DATA_TEMP2END_TABLE
   Procedimiento para la carga de datos mediante bulk binds desde una tabla temporal a la tabla final del modelo de datos.
-  ParÃ¡metros: 
+  Parámetros: 
   - load_log. Tipo boolean, si true: se generan trazas de seguimiento. Por defecto, true.
   - no_logging. Tipo boolean, si true: cambia la tabla destino a modo nologging mientras dura la carga. Por defecto, true. 
   - no_constraints. Tipo boolean, si true: deshabilita las constraints de la tabla destino mientras dura la carga. Por defecto, true. 
-  - bulks_size. Tipo pls_integer: nÃºmero de registros de cada volcado del cursor a la colecciÃ³n. Por defecto, 100.
+  - bulks_size. Tipo pls_integer: número de registros de cada volcado del cursor a la colección. Por defecto, 100.
   - trunc_end_table: Tipo boolean, si true: trunca ta tabla destino antes de comenzar la carga. Por defecto, false.
   
   Nota: Se deben sustituir las cadenas:
@@ -28,17 +28,15 @@
     SELECT * 
       FROM source_table;
 
-  --Tipo colecciÃ³n tabla para volcar el cursor
+  --Tipo colección tabla para volcar el cursor
   TYPE t_cur_source IS TABLE OF cur_source%ROWTYPE;
 
-  --ColecciÃ³n para contener los datos del cursor
+  --Colección para contener los datos del cursor
   col_source t_cur_source;
 
   --Contadores
-  --Variable contador para el nÂº de iteraciÃ³n
+  --Variable contador para el nº de iteración
   v_count NUMBER DEFAULT 0;
-  --Variable para comprobar existencia de tabla log
-  v_check NUMBER DEFAULT 0;
   --Variable contador para el total de registros
   v_sum NUMBER DEFAULT 0;
 
@@ -53,11 +51,11 @@
     ELSIF v_count = 1 THEN
       --Inicio de carga
       dbms_output.put_line('[' || to_char(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') || '] ' || $$PLSQL_UNIT || chr(9) || 'Comienzo de carga a tabla destino');
-      dbms_output.put_line('[' || to_char(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') || '] ' || $$PLSQL_UNIT || chr(9) || 'InserciÃ³n de bloque en iteraciÃ³n ' 
+      dbms_output.put_line('[' || to_char(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') || '] ' || $$PLSQL_UNIT || chr(9) || 'Inserción de bloque en iteración ' 
                                || v_count || '. Resultado: ' || nvl(v_comments, 'Ok. ') || nvl(v_comments, v_sum || ' Registro(s)'));
     ELSE
-      --Salida de resultado de inserciÃ³n de bloque en tabla destino
-      dbms_output.put_line('[' || to_char(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') || '] ' || $$PLSQL_UNIT || chr(9) || 'InserciÃ³n de bloque en iteraciÃ³n ' 
+      --Salida de resultado de inserción de bloque en tabla destino
+      dbms_output.put_line('[' || to_char(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') || '] ' || $$PLSQL_UNIT || chr(9) || 'Inserción de bloque en iteración ' 
                                || v_count || '. Resultado: ' || nvl(v_comments, 'Ok. ') || nvl(v_comments, v_sum || ' Registro(s)'));
     END IF;
   
@@ -106,19 +104,19 @@ BEGIN
   
     BEGIN
     
-      --Volcado a colecciÃ³n en bloques de 100 registros (por defecto)
+      --Volcado a colección en bloques de 100 registros (por defecto)
       FETCH cur_source BULK COLLECT INTO col_source LIMIT bulks_size;
     
-      --Incremento para el nÃºmero de iteraciÃ³n
+      --Incremento para el número de iteración
       v_count := v_count + 1;
     
-      --InserciÃ³n de bloque como bulk binds y con el hint append
+      --Inserción de bloque como bulk binds y con el hint append
       FORALL i IN col_source.first .. col_source.last
         INSERT /*+ APPEND */ INTO end_table
         VALUES col_source(i);
       COMMIT;
     
-      --Incremento de nÃºmero de registros totales
+      --Incremento de número de registros totales
       v_sum := v_sum + col_source.count;
     
       --Llamada a procedimineto local de log con resultado ok
@@ -175,7 +173,7 @@ EXCEPTION
     ROLLBACK;
     IF load_log THEN
       --Llamada a procedimineto local de log con resultado error
-      p_logger(NULL, 'ERROR: ExcepciÃ³n global. ' || SQLERRM);
+      p_logger(NULL, 'ERROR: Excepción global. ' || SQLERRM);
     END IF;
   
 END;

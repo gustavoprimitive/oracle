@@ -15,11 +15,11 @@ DECLARE
   e_no_existe EXCEPTION;
 
   --Cursor con los nombres de las tablas del esquema
-  CURSOR cur_tablas(v_esquema VARCHAR2) IS
-    SELECT table_name FROM all_tables WHERE owner = :v_esquema;
+  CURSOR cur_tablas(v_esquema all_users.username%TYPE) IS
+    SELECT table_name FROM all_tables WHERE owner = v_esquema;
 
   --Cursor con los nombres de las columnas de la tabla recibida  
-  CURSOR cur_campos IS
+  CURSOR cur_campos(v_tabla all_tables.table_name%TYPE) IS
     SELECT column_name, data_type
       FROM all_tab_cols
      WHERE table_name = v_tabla;
@@ -50,7 +50,7 @@ BEGIN
       v_query := v_query || v_esquema || '.' || r_cur_tablas.table_name;
     
       --Recorrido de columnas de tabla
-      FOR r_cur_campos IN cur_campos LOOP
+      FOR r_cur_campos IN cur_campos(v_tabla) LOOP
       
         --Si es primera iteración se concatena la cláusula WHERE
         IF cur_campos%ROWCOUNT = 1 THEN

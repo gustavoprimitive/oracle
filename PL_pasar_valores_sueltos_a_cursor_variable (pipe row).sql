@@ -1,5 +1,4 @@
---Genera un objeto colección de CLOB en el que se almacenan los valores como filas a través de PIPE ROW.
---Alternativa a "PL_pasar_valores_sueltos_a_cursor_variable.sql" para Oracle 10g ya que esta versión no permite asignar la consulta en CLOB a un cursor variable.
+--Genera un objeto colección de CLOB en el que se almacenan los valores de una cadena (separados por comas) como filas a través de PIPE ROW.
 --Gustavo Tejerina
 
 --Creación de tipo objeto CLOB

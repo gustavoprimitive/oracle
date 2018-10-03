@@ -47,8 +47,9 @@ DECLARE
 --Main
 BEGIN
 
-  --Recorrido de tablas de esquema
+    dbms_output.enable(NULL);
 
+    --Recorrido de tablas de esquema
     FOR r_cur_tablas IN cur_tablas(v_esquema) LOOP
       v_tabla := r_cur_tablas.table_name;
       v_query := 'SELECT ROWID FROM ';

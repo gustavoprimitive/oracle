@@ -1,5 +1,5 @@
---Se finalizan las sesiones en estado INVALID.
---Debe ejecutarse con usuario con rol DBA.
+--Se finalizan las sesiones en estado INVALID
+--Debe ejecutarse con usuario con rol DBA
 --Gustavo Tejerina
 
 DECLARE
@@ -13,3 +13,4 @@ BEGIN
   END LOOP;
   DBMS_OUTPUT.PUT_LINE(CHR(10) || 'Finalizada(s) ' || v_cont || ' sesion(es) en estado INVALID');
 END;
+/

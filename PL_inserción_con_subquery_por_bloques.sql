@@ -34,12 +34,11 @@ BEGIN
     --Contador de total insertados
     v_ins_count := v_ins_count + c_rows_trans;
   
-    --Traza
+    --Traza y confirmación de transacción
     IF SQL%ROWCOUNT > 0 THEN
       p_log(i, v_ins_count);
-    END IF;
-  
-    COMMIT;
+      COMMIT;
+    END IF;      
   
   END LOOP;
 

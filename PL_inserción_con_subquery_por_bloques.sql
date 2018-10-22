@@ -1,10 +1,10 @@
---Inserción de registros de tabla origen a destino por bloques, mediante INSERT con subquery, y controlando el nº de registros del bloque.
---Se confirma la transacción tras la inserción de cada bloque.
---Gustavo Tejerina.
+--InserciÃ³n de registros de tabla origen a destino por bloques, mediante INSERT con subquery, y controlando el nÂº de registros del bloque
+--Se confirma la transacciÃ³n tras la inserciÃ³n de cada bloque
+--Gustavo Tejerina
 
 DECLARE
 
-    --Número de registros de cada confirmación de transacción
+    --NÃºmero de registros de cada confirmaciÃ³n de transacciÃ³n
     c_rows_trans 	CONSTANT NUMBER := 500;    
     --Contadores
     v_total_count 	NUMBER DEFAULT 0;
@@ -14,17 +14,17 @@ DECLARE
     PROCEDURE p_log (i NUMBER, v_ins_count NUMBER)
         AS
     BEGIN
-        dbms_output.put_line(TO_CHAR(SYSDATE,'DD/MM/YYYY HH24:MI:SS') || chr(9) || 'Inserción #' || i || ' - ' || v_ins_count || ' registros totales insertados');
+        dbms_output.put_line(TO_CHAR(SYSDATE,'DD/MM/YYYY HH24:MI:SS') || chr(9) || 'InserciÃ³n #' || i || ' - ' || v_ins_count || ' registros totales insertados');
     END;
 
 BEGIN
 
     dbms_output.enable(NULL);
 
-    --Nº total de registros
+    --NÂº total de registros
     SELECT COUNT(*) INTO v_total_count FROM employees;
 
-    --Inserción de bloques registros hasta llegar al total
+    --InserciÃ³n de bloques registros hasta llegar al total
     FOR i IN 1.. ( v_total_count / c_rows_trans ) + 1 LOOP
 	
         INSERT /*+ APPEND */ INTO employees_final 

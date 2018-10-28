@@ -3,9 +3,11 @@
 
 --Creación de tipo objeto CLOB
 CREATE OR REPLACE TYPE t_clob AS OBJECT v_clob CLOB;
+/
 
 --Creación de tipo colección tabla de CLOB 
 CREATE OR REPLACE TYPE t_col_clob IS TABLE OF t_clob;
+/
 
 --Función que recibe la cadena con los valores separados por comas y los separa y carga en la colección 
 CREATE OR REPLACE FUNCTION f_pipe_row(v_cad CLOB) 
@@ -35,6 +37,7 @@ BEGIN
     PIPE ROW(t_clob(v_valor));
   END LOOP;
 END;
+/
 
 --Bloque anónimo que llama a la función anterior pasánsole la cadena y carga los valores de la misma en el cursor variable
 DECLARE
@@ -50,4 +53,5 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE(v_valor);
   END LOOP;
 END;
+/
 

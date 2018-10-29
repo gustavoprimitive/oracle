@@ -11,9 +11,9 @@ BEGIN
   SELECT s.sid, s.serial#
     INTO v_sid, v_serial
     FROM v$session s, v$process p, v$instance i
-   WHERE p.spid = '&v_proceso' --nº de proceso en S.O.
+   WHERE p.spid = '&v_proceso' --Nº de proceso en S.O.
      AND s.paddr = p.addr
-     AND UPPER(i.host_name) = UPPER('&v_host'); --hostname de máquina
+     AND UPPER(i.host_name) = UPPER('&v_host'); --Hostname de máquina
 
   EXECUTE IMMEDIATE 'ALTER SYSTEM KILL SESSION ''' || v_sid || ',' || v_serial || ''' IMMEDIATE';
 

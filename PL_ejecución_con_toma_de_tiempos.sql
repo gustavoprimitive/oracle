@@ -3,7 +3,7 @@
 
 DECLARE
 
-  v_num_iter NUMBER := '&v_num_iter'; --Variable de sustitución con el nº de ejecuciones
+  v_num_iter NUMBER := '&v_num_iter'; --Nº de ejecuciones a realizar
   v_ini      TIMESTAMP;
   v_fin      TIMESTAMP;
   v_interv   INTERVAL DAY(1) TO SECOND(6);

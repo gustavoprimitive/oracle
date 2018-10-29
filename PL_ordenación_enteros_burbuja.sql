@@ -38,6 +38,8 @@ END;
 /
 
 --Llamada a procedimiento para que ordene 20 valores aleatorios
+SET SERVEROUTPUT ON
+
 BEGIN
 p_order_random_integer(20);
 END;

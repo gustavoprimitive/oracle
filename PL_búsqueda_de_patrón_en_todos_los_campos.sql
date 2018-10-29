@@ -2,11 +2,13 @@
 --Los datos de entrada son el patrón de búsqueda y el nombre del esquema
 --Gustavo Tejerina
 
+SET SERVEROUTPUT ON
+
 DECLARE
 
   --Datos de entrada
   v_patron  VARCHAR2(100) := '&v_patron';
-  v_esquema all_users.username%TYPE := upper('&v_esquema');
+  v_esquema all_users.username%TYPE := UPPER('&v_esquema');
 
   v_query CLOB;
   v_tabla all_tables.table_name%TYPE;
@@ -51,6 +53,7 @@ BEGIN
 
     --Recorrido de tablas de esquema
     FOR r_cur_tablas IN cur_tablas(v_esquema) LOOP
+	
       v_tabla := r_cur_tablas.table_name;
       v_query := 'SELECT ROWID FROM ';
       v_query := v_query || v_esquema || '.' || r_cur_tablas.table_name;
@@ -76,12 +79,8 @@ BEGIN
       END LOOP;
     
       --Ejecución de consulta y volcado de resultados
-      /*BEGIN*/
         EXECUTE IMMEDIATE v_query BULK COLLECT INTO v_res;
-      /*EXCEPTION
-        WHEN OTHERS THEN
-          NULL;
-      END;*/
+
       --Output si se han encontrado resultados
       IF v_res.count > 0 THEN
         p_output_resultado(v_res);

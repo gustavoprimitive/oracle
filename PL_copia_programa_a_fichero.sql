@@ -3,9 +3,9 @@
 
 DECLARE
 
-  v_program   all_source.name%TYPE := upper('&v_program');
-  v_dir       VARCHAR2(500) := '&v_dir';
-  v_fichero   UTL_FILE.FILE_TYPE;
+  v_program   all_source.name%TYPE := UPPER('&v_program'); --Nombre de objeto PL/SQL a copiar
+  v_dir       VARCHAR2(500) := '&v_dir'; --Ruta de servidor para el directorio
+  v_fichero   utl_file.file_type;
   v_file_name VARCHAR2(50);
   v_where     VARCHAR2(500);
   v_query     VARCHAR2(500);
@@ -18,10 +18,10 @@ DECLARE
 BEGIN
 
   --Construcción de consulta para cursor variable
-  SELECT COUNT(DISTINCT(NAME))
+  SELECT COUNT(DISTINCT(name))
     INTO v_check
     FROM all_source
-   WHERE NAME = v_program;
+   WHERE name = v_program;
 
   IF v_check = 0 THEN
     dbms_output.put_line('El nombre ' || v_program || ' no se corresponde con ningún objeto PL/SQL');
@@ -31,16 +31,18 @@ BEGIN
   END IF;
 
   --Creación de directorio
+  v_dir_nom := dbms_random.string('U', 10);  
+  
   SELECT COUNT(1)
     INTO v_check
     FROM all_directories
-   WHERE directory_name = 'TEMP_DIR';
+   WHERE directory_name = v_dir_nom;
 
   IF v_check = 0 THEN
-    EXECUTE IMMEDIATE 'CREATE DIRECTORY TEMP_DIR AS ' || '''' || v_dir || '''';
-    EXECUTE IMMEDIATE 'GRANT READ, WRITE ON DIRECTORY TEMP_DIR TO public';
+    EXECUTE IMMEDIATE 'CREATE DIRECTORY '|| v_dir_nom || ' AS ' || '''' || v_dir || '''';
+    EXECUTE IMMEDIATE 'GRANT READ, WRITE ON DIRECTORY ' || v_dir_nom ' TO public';
   ELSE
-    dbms_output.put_line('El directorio TEMP_DIR ya existe');
+    dbms_output.put_line('El directorio ' || v_dir_nom || ' ya existe');
     RAISE e_excep;
   END IF;
 
@@ -48,7 +50,7 @@ BEGIN
   v_file_name := v_program || '.sql';
 
   --Apertura de fichero
-  v_fichero := UTL_FILE.FOPEN('TEMP_DIR', v_file_name, 'W');
+  v_fichero := utl_file.fopen(v_dir_nom, v_file_name, 'W');
 
   --Ejecución de query y escritura de resultados
   OPEN cur_out FOR v_query;
@@ -63,7 +65,7 @@ BEGIN
   CLOSE cur_out;
 
   --Borrado de directorio
-  EXECUTE IMMEDIATE 'DROP DIRECTORY TEMP_DIR';
+  EXECUTE IMMEDIATE 'DROP DIRECTORY ' || v_dir_nom;
 
 EXCEPTION
   WHEN OTHERS THEN

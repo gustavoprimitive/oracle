@@ -12,9 +12,11 @@ CREATE OR REPLACE TYPE t_col_clob IS TABLE OF t_clob;
 --Función que recibe la cadena con los valores separados por comas y los separa y carga en la colección 
 CREATE OR REPLACE FUNCTION f_pipe_row(v_cad CLOB) 
 RETURN t_col_clob PIPELINED AS
+
   cursorsalida SYS_REFCURSOR;
   v_valor      CLOB;
   v_ocurr      NUMBER DEFAULT 0;
+  
 BEGIN
   --Obtención del número de subcadenas
   SELECT LENGTH(v_cad) - LENGTH(REPLACE(v_cad, ',', NULL))
@@ -40,11 +42,16 @@ END;
 /
 
 --Bloque anónimo que llama a la función anterior pasánsole la cadena y carga los valores de la misma en el cursor variable
+SET SERVEROUTPUT ON
+
 DECLARE
+
   cursorsalida SYS_REFCURSOR;
   v_cadena     CLOB := 'aaa,bbb,ccc,ddd,eee';
   v_valor      CLOB;
+  
 BEGIN
+
   OPEN cursorsalida FOR SELECT * FROM TABLE(f_pipe_row(v_cadena));
   --Recorrido del cursor variable y output de sus valores
   LOOP
@@ -52,6 +59,6 @@ BEGIN
     EXIT WHEN cursorsalida%NOTFOUND;
     DBMS_OUTPUT.PUT_LINE(v_valor);
   END LOOP;
+  
 END;
 /
-

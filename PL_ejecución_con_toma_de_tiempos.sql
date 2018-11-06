@@ -22,7 +22,7 @@ BEGIN
     dbms_output.put_line(v_ini || chr(9) || 'INFO' || chr(9) || 'Ejecución #' || i);
   
     --Aquí iría el código del que se quieren registrar los tiempos ->
-    --Generación de delay de entre 1 y 3 segundos
+    --Como ejemplo, se genera un delay de entre 1 y 3 segundos
     dbms_lock.sleep(dbms_random.value(1, 3));
     -- <- Aquí iría el código del que se quieren registrar los tiempos
   

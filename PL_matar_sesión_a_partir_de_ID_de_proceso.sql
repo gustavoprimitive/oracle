@@ -5,7 +5,7 @@ SET SERVEROUTPUT ON
 
 DECLARE
 
-  v_proceso NUMBER := '&v_proceso'; --Nº de proceso en S.O. 
+  v_proceso NUMBER := &v_proceso; --Nº de proceso en S.O. 
   v_sid    v$session.sid%TYPE;
   v_serial v$process.serial#%TYPE;
 

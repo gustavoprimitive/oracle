@@ -1,11 +1,11 @@
 --Genera un objeto colección de CLOB en el que se almacenan los valores de una cadena (separados por comas) como filas a través de PIPE ROW.
 --Gustavo Tejerina
 
---Creación de tipo objeto CLOB
-CREATE OR REPLACE TYPE t_clob AS OBJECT v_clob CLOB;
+--Creación de tipo objeto de variable CLOB
+CREATE OR REPLACE TYPE t_clob AS OBJECT (v_clob CLOB);
 /
 
---Creación de tipo colección tabla de CLOB 
+--Creación de tipo colección tabla del tipo objeto anterior
 CREATE OR REPLACE TYPE t_col_clob IS TABLE OF t_clob;
 /
 
@@ -19,9 +19,7 @@ RETURN t_col_clob PIPELINED AS
   
 BEGIN
   --Obtención del número de subcadenas
-  SELECT LENGTH(v_cad) - LENGTH(REPLACE(v_cad, ',', NULL))
-    INTO v_ocurr
-    FROM dual;
+  v_ocurr := LENGTH(v_cad) - LENGTH(REPLACE(v_cad, ',', NULL));
   --Extracción de las subcadenas
   FOR i IN 1 .. v_ocurr + 1 LOOP
     IF i = 1 THEN

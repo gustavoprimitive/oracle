@@ -12,7 +12,7 @@ DECLARE
     SELECT column_name, data_type
       FROM all_tab_cols
      WHERE table_name = v_tabla
-       AND owner = 'SA'
+       --AND owner = 'SA'
      ORDER BY column_id;
 	 
   v_query      VARCHAR2(32767);

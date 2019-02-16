@@ -7,7 +7,6 @@ DECLARE
   v_cont_ini    NUMBER DEFAULT 1;
   v_cont_fin    NUMBER DEFAULT 0;
   v_out         VARCHAR2(32767);
-  v_cont_lineas NUMBER DEFAULT 0;
 
 BEGIN
 
@@ -15,7 +14,7 @@ BEGIN
   SELECT campo_clob INTO v_clob FROM tabla WHERE ROWNUM <= 1;
 
   --Iteración por cada salto de línea dentro del CLOB
-  FOR i IN 1 ..  REGEXP_COUNT(v_clob, CHR(10)) LOOP
+  FOR i IN 1 .. REGEXP_COUNT(v_clob, CHR(10)) LOOP
   
     --Primera posición de cada línea
     IF i = 1 THEN

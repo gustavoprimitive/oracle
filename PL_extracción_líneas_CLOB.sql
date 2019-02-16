@@ -14,10 +14,8 @@ BEGIN
   --Obtención de campo CLOB
   SELECT campo_clob INTO v_clob FROM tabla WHERE ROWNUM <= 1;
 
-  --Nº de ocurrencias de salto de línea dentro del CLOB
-  v_cont_lineas := REGEXP_COUNT(v_clob, CHR(10));
-
-  FOR i IN 1 .. v_cont_lineas LOOP
+  --Iteración por cada salto de línea dentro del CLOB
+  FOR i IN 1 ..  REGEXP_COUNT(v_clob, CHR(10)) LOOP
   
     --Primera posición de cada línea
     IF i = 1 THEN

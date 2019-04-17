@@ -3,11 +3,12 @@
 
 DECLARE
 
-  v_file_name CONSTANT VARCHAR2(50) := 'salida.csv'; --Nombre de fichero de salida
+  v_file_name CONSTANT VARCHAR2(50) := 'employees.csv'; --Nombre de fichero de salida
   v_dir       CONSTANT VARCHAR2(50) := 'DIR'; --Nombre de directorio
   v_table     CONSTANT VARCHAR2(50) := 'EMPLOYEES'; --Nombre de tabla a exportar
-  v_where     CONSTANT VARCHAR2(500) := 'WHERE ROWNUM <= 10'; --Cláusula where a ejecutar (si es el caso)
+  v_where     CONSTANT VARCHAR2(500) := ''; --Cláusula where a ejecutar (si es el caso)
   v_sep       CONSTANT CHAR(1) := ';'; --Separador en CSV
+  v_ins_head  CONSTANT BOOLEAN := true; --Indica si se incluye (true) o no (false) el header de los campos
   v_query     VARCHAR2(500);
   v_csv_file   utl_file.file_type;
   TYPE t_out IS REF CURSOR;
@@ -16,6 +17,7 @@ DECLARE
   v_count_cols NUMBER;
   v_path       VARCHAR2(200);
   v_txt_error  VARCHAR2(500);
+  v_header     VARCHAR2(20000);
   e_error EXCEPTION;
   
   CURSOR c_query(v_tab VARCHAR2) IS
@@ -54,8 +56,14 @@ BEGIN
   FOR r_query IN c_query(v_table) LOOP
     IF c_query%ROWCOUNT ^= v_count_cols THEN
       v_query := v_query || r_query.column_name || '||''' || v_sep || '''||';
+      IF v_ins_head THEN
+		v_header := v_header || r_query.column_name || v_sep;
+	  END IF;
     ELSE
       v_query := v_query || r_query.column_name;
+      IF v_ins_head THEN
+		v_header := v_header || r_query.column_name;    
+	  END IF;
     END IF;
   END LOOP;
 
@@ -90,7 +98,11 @@ BEGIN
   END;
 
   BEGIN
-    LOOP
+    IF v_ins_head THEN
+		dbms_output.put_line(v_header);
+		utl_file.put_line(v_csv_file, v_header);
+	END IF;
+	LOOP
       FETCH cur_out INTO v_line;
       EXIT WHEN cur_out%NOTFOUND;
       dbms_output.put_line(v_line);
@@ -110,4 +122,3 @@ EXCEPTION
   
 END;
 /
-
